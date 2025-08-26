@@ -18,6 +18,7 @@ import { SparklesText } from "@/components/magicui/sparkles-text";
 import { TextAnimate } from "@/components/magicui/text-animate";
 import { AuroraText } from "@/components/magicui/aurora-text";
 import { Confetti } from "@/components/magicui/confetti";
+import { CoolMode } from "@/components/magicui/cool-mode";
 
 // Types
 interface ButtonProps {
@@ -335,108 +336,11 @@ export default function GlassVideoWebsite(): JSX.Element {
 
   return (
     <>
-      <style jsx>{`
-        .glass {
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-        }
-
-        .glass-strong {
-          background: rgba(255, 255, 255, 0.15);
-          backdrop-filter: blur(15px);
-          -webkit-backdrop-filter: blur(15px);
-        }
-
-        .slider {
-          -webkit-appearance: none;
-          appearance: none;
-          height: 8px;
-          border-radius: 4px;
-          outline: none;
-        }
-
-        .slider::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: white;
-          cursor: pointer;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .slider::-moz-range-thumb {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: white;
-          cursor: pointer;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-          border: none;
-        }
-
-        @keyframes pulse {
-          0%,
-          100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-
-        .animate-pulse {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        /* Hide video controls on all devices */
-        video::-webkit-media-controls {
-          display: none !important;
-        }
-
-        video::-webkit-media-controls-panel {
-          display: none !important;
-        }
-
-        video::-webkit-media-controls-play-button {
-          display: none !important;
-        }
-
-        video::-webkit-media-controls-start-playback-button {
-          display: none !important;
-        }
-
-        video::-moz-media-controls {
-          display: none !important;
-        }
-
-        video::-ms-media-controls {
-          display: none !important;
-        }
-
-        /* Ensure video fills container properly */
-        .video-container {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-        }
-
-        /* Additional iOS video fixes - keeping them minimal */
-        video::-webkit-media-controls-overlay-play-button {
-          display: none !important;
-        }
-
-        video::-webkit-media-controls-start-playback-button {
-          display: none !important;
-        }
-      `}</style>
-
       <div className="relative min-h-screen overflow-hidden flex items-center justify-center">
+        {/* <Confetti
+          ref={confettiRef}
+          className="absolute left-0 top-0 z-40 size-full"
+        /> */}
         {isLoading && (
           <>
             <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
@@ -450,19 +354,11 @@ export default function GlassVideoWebsite(): JSX.Element {
                     transform: showText ? "translateY(0)" : "translateY(32px)",
                   }}
                 >
-                  <h1 className="text-6xl md:text-5xl font-bold text-white mb-4">
-                    <AuroraText>ShAnki's</AuroraText>{" "}
-                    <TextAnimate
-                      className="text-6xl md:text-5xl font-bold text-white "
-                      animation="blurInUp"
-                      by="character"
-                      once
-                    >
-                      Love Gallery
-                    </TextAnimate>
+                  <h1 className="text-4xl md:text-5xl font-bold text-white mb-10">
+                    ShAnki's Love Gallery
                   </h1>
                   <div
-                    className="flex items-center justify-center gap-2 text-xl text-white/90 transition-all duration-1000"
+                    className="flex items-center justify-center gap-2 text-2xl text-white/90 transition-all duration-1000"
                     style={{
                       opacity: showText ? 1 : 0,
                       transform: showText
@@ -541,22 +437,19 @@ export default function GlassVideoWebsite(): JSX.Element {
 
         {/* Navigation Bar - Only show icon */}
         {!showVideoControls && (
-          <nav
-            className="relative z-10 p-2 cursor-pointer"
-            onClick={() => confettiRef.current?.fire()}
-          >
-            <SparklesText
-              sparklesCount={2}
-              className="font-black text-white text-xl"
-            >
-              SHANKI ❤️
-            </SparklesText>
+          <nav className="relative z-50 p-2 cursor-pointer">
+            <CoolMode>
+              <Button variant="ghost" className="hover:bg-transparent">
+                <SparklesText
+                  sparklesCount={2}
+                  className="font-black text-white text-xl cursor-pointer"
+                >
+                  SHANKI ❤️
+                </SparklesText>
+              </Button>
+            </CoolMode>
           </nav>
         )}
-        <Confetti
-          ref={confettiRef}
-          className="fixed inset-0 z-50 pointer-events-none"
-        />
         {/* Spotify Embed - Always loaded but positioned based on state */}
         <div
           className={`fixed bottom-2 w-80 glass-strong rounded-xl border border-white/20 overflow-hidden transition-all duration-500 z-10 ${
