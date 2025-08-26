@@ -12,6 +12,12 @@ import {
   Pause,
   Heart,
 } from "lucide-react";
+import { NumberTicker } from "@/components/magicui/number-ticker";
+import { Meteors } from "@/components/magicui/meteors";
+import { SparklesText } from "@/components/magicui/sparkles-text";
+import { TextAnimate } from "@/components/magicui/text-animate";
+import { AuroraText } from "@/components/magicui/aurora-text";
+import { Confetti } from "@/components/magicui/confetti";
 
 // Types
 interface ButtonProps {
@@ -102,6 +108,7 @@ export default function GlassVideoWebsite(): JSX.Element {
   const [showProceedButton, setShowProceedButton] = useState<boolean>(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const spotifyRef = useRef<HTMLIFrameElement>(null);
+  const confettiRef = useRef<any>(null);
 
   // Calculate days since April 17th (assuming current year)
   const calculateDaysSince = (): number => {
@@ -431,63 +438,82 @@ export default function GlassVideoWebsite(): JSX.Element {
 
       <div className="relative min-h-screen overflow-hidden flex items-center justify-center">
         {isLoading && (
-          <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
-            {/* Centered text container */}
-            <div className="absolute w-[500px] max-w-[80dvw] text-center z-10">
-              <div
-                className="transition-all duration-1000 ease-out"
-                style={{
-                  opacity: showText ? 1 : 0,
-                  transform: showText ? "translateY(0)" : "translateY(32px)",
-                }}
-              >
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 bg-gradient-to-r from-pink-400 via-red-400 to-pink-600 bg-clip-text text-transparent">
-                  ShAnki's Love Gallery
-                </h1>
+          <>
+            <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+              <Meteors number={30} className="z-10 inset-0" />
+              {/* Centered text container */}
+              <div className="absolute w-[500px] max-w-[80dvw] text-center z-30">
                 <div
-                  className="flex items-center justify-center gap-2 text-xl text-white/90 transition-all duration-1000"
+                  className="transition-all duration-1000 ease-out"
                   style={{
                     opacity: showText ? 1 : 0,
                     transform: showText ? "translateY(0)" : "translateY(32px)",
-                    transitionDelay: "500ms",
                   }}
                 >
-                  <Heart
-                    fill="red"
-                    className="h-5 w-5 text-red-400 animate-pulse"
-                  />
-                  <span>Since {daysSince} days</span>
-                  <Heart
-                    fill="red"
-                    className="h-5 w-5 text-red-400 animate-pulse"
-                  />
+                  <h1 className="text-6xl md:text-5xl font-bold text-white mb-4">
+                    <AuroraText>ShAnki's</AuroraText>{" "}
+                    <TextAnimate
+                      className="text-6xl md:text-5xl font-bold text-white "
+                      animation="blurInUp"
+                      by="character"
+                      once
+                    >
+                      Love Gallery
+                    </TextAnimate>
+                  </h1>
+                  <div
+                    className="flex items-center justify-center gap-2 text-xl text-white/90 transition-all duration-1000"
+                    style={{
+                      opacity: showText ? 1 : 0,
+                      transform: showText
+                        ? "translateY(0)"
+                        : "translateY(32px)",
+                      transitionDelay: "500ms",
+                    }}
+                  >
+                    <Heart
+                      fill="red"
+                      className="h-5 w-5 text-red-400 animate-pulse"
+                    />
+                    <span>
+                      <NumberTicker
+                        value={daysSince}
+                        className="whitespace-pre-wrap tracking-tighter text-white"
+                      />{" "}
+                      days journey
+                    </span>
+                    <Heart
+                      fill="red"
+                      className="h-5 w-5 text-red-400 animate-pulse"
+                    />
+                  </div>
                 </div>
               </div>
+
+              {/* Background image */}
+              <img
+                src="/img/us2.png"
+                alt="Loading"
+                className="h-screen w-screen object-cover opacity-60 z-20"
+              />
+
+              {/* Proceed button */}
+              {showProceedButton && (
+                <div className="absolute z-60 bottom-8 left-1/2 transform -translate-x-1/2 ">
+                  <button
+                    onClick={proceedToSite}
+                    className="group relative inline-flex items-center justify-center px-8 py-3 font-medium text-white transition-all duration-300 ease-out border border-white/30 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:scale-105 active:scale-95"
+                  >
+                    <span className="relative flex items-center gap-2">
+                      Enter Gallery
+                      <div className="w-0 h-0.5 bg-gradient-to-r from-pink-400 to-red-400 group-hover:w-6 transition-all duration-300"></div>
+                    </span>
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-400/20 to-red-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </button>
+                </div>
+              )}
             </div>
-
-            {/* Background image */}
-            <img
-              src="/img/us2.png"
-              alt="Loading"
-              className="h-screen w-screen object-cover opacity-60"
-            />
-
-            {/* Proceed button */}
-            {showProceedButton && (
-              <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
-                <button
-                  onClick={proceedToSite}
-                  className="group relative inline-flex items-center justify-center px-8 py-3 font-medium text-white transition-all duration-300 ease-out border border-white/30 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:scale-105 active:scale-95"
-                >
-                  <span className="relative flex items-center gap-2">
-                    Enter Gallery
-                    <div className="w-0 h-0.5 bg-gradient-to-r from-pink-400 to-red-400 group-hover:w-6 transition-all duration-300"></div>
-                  </span>
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-400/20 to-red-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </button>
-              </div>
-            )}
-          </div>
+          </>
         )}
 
         {/* Full-screen video background */}
@@ -515,13 +541,22 @@ export default function GlassVideoWebsite(): JSX.Element {
 
         {/* Navigation Bar - Only show icon */}
         {!showVideoControls && (
-          <nav className="relative z-10 p-2">
-            <span className="font-black text-white mix-blend-difference ">
+          <nav
+            className="relative z-10 p-2 cursor-pointer"
+            onClick={() => confettiRef.current?.fire()}
+          >
+            <SparklesText
+              sparklesCount={2}
+              className="font-black text-white text-xl"
+            >
               SHANKI ❤️
-            </span>
+            </SparklesText>
           </nav>
         )}
-
+        <Confetti
+          ref={confettiRef}
+          className="fixed inset-0 z-50 pointer-events-none"
+        />
         {/* Spotify Embed - Always loaded but positioned based on state */}
         <div
           className={`fixed bottom-2 w-80 glass-strong rounded-xl border border-white/20 overflow-hidden transition-all duration-500 z-10 ${
