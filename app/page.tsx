@@ -105,7 +105,7 @@ export default function GlassVideoWebsite(): JSX.Element {
 
   // Calculate days since April 17th (assuming current year)
   const calculateDaysSince = (): number => {
-    const startDate = new Date(2024, 3, 17); // April 17, 2024 (month is 0-indexed)
+    const startDate = new Date(2025, 3, 17); // April 17, 2024 (month is 0-indexed)
     const currentDate = new Date();
     const timeDiff = currentDate.getTime() - startDate.getTime();
     const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -163,10 +163,43 @@ export default function GlassVideoWebsite(): JSX.Element {
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
 
+    // Handle iOS fullscreen events
+    const handleEnterFullscreen = () => {
+      console.log("Video entered fullscreen");
+    };
+
+    const handleExitFullscreen = () => {
+      console.log("Video exited fullscreen");
+      // Ensure video continues playing after exiting fullscreen on iOS
+      setTimeout(() => {
+        if (video.paused && !isLoading) {
+          video.play().catch(console.log);
+        }
+      }, 100);
+    };
+
+    // Handle visibility change (when user switches tabs or minimizes browser)
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Page is hidden, but don't pause the video
+        console.log("Page hidden, keeping video playing");
+      } else {
+        // Page is visible again, ensure video is playing
+        console.log("Page visible, ensuring video plays");
+        if (video.paused && !isLoading) {
+          video.play().catch(console.log);
+        }
+      }
+    };
+
     video.addEventListener("loadeddata", handleLoadedData);
     video.addEventListener("timeupdate", updateProgress);
     video.addEventListener("play", handlePlay);
     video.addEventListener("pause", handlePause);
+    video.addEventListener("webkitbeginfullscreen", handleEnterFullscreen);
+    video.addEventListener("webkitendfullscreen", handleExitFullscreen);
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     // Preload video
     video.preload = "auto";
@@ -176,8 +209,11 @@ export default function GlassVideoWebsite(): JSX.Element {
       video.removeEventListener("timeupdate", updateProgress);
       video.removeEventListener("play", handlePlay);
       video.removeEventListener("pause", handlePause);
+      video.removeEventListener("webkitbeginfullscreen", handleEnterFullscreen);
+      video.removeEventListener("webkitendfullscreen", handleExitFullscreen);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, []);
+  }, [isLoading]);
 
   useEffect(() => {
     if (!showVideoControls) return;
@@ -236,6 +272,11 @@ export default function GlassVideoWebsite(): JSX.Element {
   const autoplayVideo = (): void => {
     const video = videoRef.current;
     if (video) {
+      // Ensure video properties are set for iOS
+      video.setAttribute("playsinline", "true");
+      video.setAttribute("webkit-playsinline", "true");
+      video.muted = true;
+
       video.play().catch((error) => {
         console.log("Video autoplay failed:", error);
       });
@@ -342,13 +383,57 @@ export default function GlassVideoWebsite(): JSX.Element {
         .animate-pulse {
           animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
+
+        /* Hide video controls on all devices */
+        video::-webkit-media-controls {
+          display: none !important;
+        }
+
+        video::-webkit-media-controls-panel {
+          display: none !important;
+        }
+
+        video::-webkit-media-controls-play-button {
+          display: none !important;
+        }
+
+        video::-webkit-media-controls-start-playback-button {
+          display: none !important;
+        }
+
+        video::-moz-media-controls {
+          display: none !important;
+        }
+
+        video::-ms-media-controls {
+          display: none !important;
+        }
+
+        /* Ensure video fills container properly */
+        .video-container {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+        }
+
+        /* Additional iOS video fixes - keeping them minimal */
+        video::-webkit-media-controls-overlay-play-button {
+          display: none !important;
+        }
+
+        video::-webkit-media-controls-start-playback-button {
+          display: none !important;
+        }
       `}</style>
 
-      <div className="relative min-h-screen overflow-hidden">
+      <div className="relative min-h-screen overflow-hidden flex items-center justify-center">
         {isLoading && (
           <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
             {/* Centered text container */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] text-center z-10">
+            <div className="absolute w-[500px] max-w-[80dvw] text-center z-10">
               <div
                 className="transition-all duration-1000 ease-out"
                 style={{
@@ -357,7 +442,7 @@ export default function GlassVideoWebsite(): JSX.Element {
                 }}
               >
                 <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 bg-gradient-to-r from-pink-400 via-red-400 to-pink-600 bg-clip-text text-transparent">
-                  Shanki's Love Gallery
+                  ShAnki's Love Gallery
                 </h1>
                 <div
                   className="flex items-center justify-center gap-2 text-xl text-white/90 transition-all duration-1000"
@@ -367,18 +452,24 @@ export default function GlassVideoWebsite(): JSX.Element {
                     transitionDelay: "500ms",
                   }}
                 >
-                  <Heart className="h-5 w-5 text-red-400 animate-pulse" />
+                  <Heart
+                    fill="red"
+                    className="h-5 w-5 text-red-400 animate-pulse"
+                  />
                   <span>Since {daysSince} days</span>
-                  <Heart className="h-5 w-5 text-red-400 animate-pulse" />
+                  <Heart
+                    fill="red"
+                    className="h-5 w-5 text-red-400 animate-pulse"
+                  />
                 </div>
               </div>
             </div>
 
             {/* Background image */}
             <img
-              src="/img/us.jpeg"
+              src="/img/us2.png"
               alt="Loading"
-              className="h-screen w-screen object-cover opacity-80"
+              className="h-screen w-screen object-cover opacity-60"
             />
 
             {/* Proceed button */}
@@ -405,38 +496,40 @@ export default function GlassVideoWebsite(): JSX.Element {
           autoPlay={!isLoading}
           loop
           muted
+          playsInline
+          controls={false}
+          disablePictureInPicture
+          controlsList="nodownload nofullscreen noremoteplayback"
           className="absolute inset-0 w-full h-full object-cover"
           preload="auto"
+          style={{
+            pointerEvents: showVideoControls ? "auto" : "none",
+          }}
+          onContextMenu={(e) => e.preventDefault()}
         >
           <source src="/video/shanki.mp4" type="video/mp4" />
         </video>
 
         {/* Overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute top-0 inset-0 bg-black/20" />
 
         {/* Navigation Bar - Only show icon */}
         {!showVideoControls && (
-          <nav className="relative z-10 p-6">
-            <div className="flex items-center">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="glass text-white hover:bg-white/20"
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-            </div>
+          <nav className="relative z-10 p-2">
+            <span className="font-black text-white mix-blend-difference ">
+              SHANKI ❤️
+            </span>
           </nav>
         )}
 
         {/* Spotify Embed - Always loaded but positioned based on state */}
         <div
-          className={`fixed bottom-6 w-80 glass-strong rounded-xl border border-white/20 overflow-hidden transition-all duration-500 z-10 ${
+          className={`fixed bottom-2 w-80 glass-strong rounded-xl border border-white/20 overflow-hidden transition-all duration-500 z-10 ${
             isLoading
               ? "left-[-400px]" // Hidden off-screen when loading
               : showVideoControls
               ? "left-[-400px]" // Hidden off-screen when video controls are open
-              : "left-6" // Normal position
+              : "left-2" // Normal position
           }`}
         >
           <iframe
@@ -456,7 +549,7 @@ export default function GlassVideoWebsite(): JSX.Element {
         {/* Video Controls Toggle - Bottom Right */}
         <Button
           onClick={toggleVideoControls}
-          className="fixed bottom-6 right-6 glass-strong text-white hover:bg-white/20 border-white/20 z-30"
+          className="fixed bottom-2 right-2 glass-strong text-white hover:bg-white/20 border-white/20 z-30"
           size="icon"
         >
           <Settings className="h-5 w-5" />

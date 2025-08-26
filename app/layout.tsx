@@ -1,12 +1,16 @@
 import type React from "react";
 import type { Metadata } from "next";
-import { Playfair_Display, Source_Sans_3 } from "next/font/google";
+import {
+  Playfair_Display,
+  Source_Sans_3,
+  Montagu_Slab,
+} from "next/font/google";
 import "./globals.css";
 
-const playfair = Playfair_Display({
+const playfair = Montagu_Slab({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-playfair",
+  variable: "--font-montagu",
   weight: ["400", "700"],
 });
 
@@ -18,7 +22,7 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "Shaki | Memories",
+  title: "Shanki | Memories",
   description: "Memories of ShAnki",
   generator: "v0.app",
 };
@@ -30,7 +34,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${playfair.variable} ${sourceSans.variable}`}>
-      <body className="font-sans antialiased">{children}</body>
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+      </head>
+      <body className="font-montagu antialiased">{children}</body>
     </html>
   );
 }
