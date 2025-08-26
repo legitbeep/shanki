@@ -354,8 +354,8 @@ export default function GlassVideoWebsite(): JSX.Element {
                     transform: showText ? "translateY(0)" : "translateY(32px)",
                   }}
                 >
-                  <h1 className="text-4xl md:text-5xl font-bold text-white mb-10">
-                    ShAnki's Love Gallery
+                  <h1 className="text-4xl md:text-3xl font-bold text-white mb-10">
+                    ShAnki's Love Diary
                   </h1>
                   <div
                     className="flex items-center justify-center gap-2 text-2xl text-white/90 transition-all duration-1000"
@@ -371,7 +371,7 @@ export default function GlassVideoWebsite(): JSX.Element {
                       fill="red"
                       className="h-5 w-5 text-red-400 animate-pulse"
                     />
-                    <span>
+                    <span className="text- font-medium text-white">
                       <NumberTicker
                         value={daysSince}
                         className="whitespace-pre-wrap tracking-tighter text-white"
@@ -437,12 +437,12 @@ export default function GlassVideoWebsite(): JSX.Element {
 
         {/* Navigation Bar - Only show icon */}
         {!showVideoControls && (
-          <nav className="relative z-50 p-2 cursor-pointer">
+          <nav className="relative z-30 p-2 cursor-pointer">
             <CoolMode>
               <Button variant="ghost" className="hover:bg-transparent">
                 <SparklesText
                   sparklesCount={2}
-                  className="font-black text-white text-xl cursor-pointer"
+                  className="font-black pointer-events-none text-white text-xl cursor-pointer"
                 >
                   SHANKI ❤️
                 </SparklesText>
