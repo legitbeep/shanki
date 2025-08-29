@@ -40,7 +40,7 @@ const getContainer = () => {
   container.setAttribute("id", id);
   container.setAttribute(
     "style",
-    "overflow:hidden; position:fixed; height:100%; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:2147483647",
+    "overflow:hidden; position:fixed; height:100%; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:2147483647"
   );
 
   document.body.appendChild(container);
@@ -52,11 +52,11 @@ let instanceCounter = 0;
 
 const applyParticleEffect = (
   element: HTMLElement,
-  options?: CoolParticleOptions,
+  options?: CoolParticleOptions
 ): (() => void) => {
   instanceCounter++;
 
-  const defaultParticle = "circle";
+  const defaultParticle = "heart"; // Changed default to heart
   const particleType = options?.particle || defaultParticle;
   const sizes = [15, 20, 25, 35, 45];
   const limit = 45;
@@ -91,7 +91,7 @@ const applyParticleEffect = (
       circle.setAttributeNS(
         null,
         "fill",
-        `hsl(${Math.random() * 360}, 70%, 50%)`,
+        `hsl(${Math.random() * 360}, 70%, 50%)`
       );
 
       circleSVG.appendChild(circle);
@@ -99,6 +99,29 @@ const applyParticleEffect = (
       circleSVG.setAttribute("height", size.toString());
 
       particle.appendChild(circleSVG);
+    } else if (particleType === "heart") {
+      // Create heart-shaped SVG
+      const svgNS = "http://www.w3.org/2000/svg";
+      const heartSVG = document.createElementNS(svgNS, "svg");
+      const heartPath = document.createElementNS(svgNS, "path");
+
+      // Heart shape path (normalized to fit in a square)
+      const heartPathData =
+        "M12,21.35l-1.45-1.32C5.4,15.36,2,12.28,2,8.5 C2,5.42,4.42,3,7.5,3c1.74,0,3.41,0.81,4.5,2.09C13.09,3.81,14.76,3,16.5,3 C19.58,3,22,5.42,22,8.5c0,3.78-3.4,6.86-8.55,11.54L12,21.35z";
+
+      heartPath.setAttributeNS(null, "d", heartPathData);
+      heartPath.setAttributeNS(
+        null,
+        "fill",
+        `hsl(${Math.random() * 60 + 300}, 70%, 60%)` // Pink/red hues for hearts
+      );
+
+      heartSVG.appendChild(heartPath);
+      heartSVG.setAttribute("width", size.toString());
+      heartSVG.setAttribute("height", size.toString());
+      heartSVG.setAttribute("viewBox", "0 0 24 24");
+
+      particle.appendChild(heartSVG);
     } else if (
       particleType.startsWith("http") ||
       particleType.startsWith("/")
@@ -153,7 +176,7 @@ const applyParticleEffect = (
           `top:${p.top}px`,
           `left:${p.left}px`,
           `transform:rotate(${p.spinVal}deg)`,
-        ].join(";"),
+        ].join(";")
       );
     });
   }

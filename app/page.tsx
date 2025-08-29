@@ -439,7 +439,10 @@ export default function GlassVideoWebsite(): JSX.Element {
         {!showVideoControls && (
           <nav className="relative z-30 p-2 cursor-pointer">
             <CoolMode>
-              <Button variant="ghost" className="hover:bg-transparent">
+              <Button
+                variant="ghost"
+                className="hover:bg-transparent cursor-pointer"
+              >
                 <SparklesText
                   sparklesCount={2}
                   className="font-black pointer-events-none text-white text-xl cursor-pointer"
